@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CharacterResource" load_steps=3 format=3 uid="uid://bmgl05g3kkrw0"]
+
+[ext_resource type="Script" uid="uid://cbwkkn5liod4k" path="res://resources/character/CharacterResource.cs" id="1_5cpv3"]
+[ext_resource type="PackedScene" uid="uid://d102wokjh2xys" path="res://scenes/character/player/Fighter.tscn" id="1_r1tip"]
+
+[resource]
+script = ExtResource("1_5cpv3")
+MovementRadius = 2
+CharacterScene = ExtResource("1_r1tip")
+metadata/_custom_type_script = "uid://cbwkkn5liod4k"
