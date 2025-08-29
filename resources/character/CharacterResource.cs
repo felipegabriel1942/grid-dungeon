@@ -10,4 +10,7 @@ public partial class CharacterResource : Resource
 
     [Export]
     public PackedScene CharacterScene { get; private set; }
+
+    [Export]
+    public PackedScene CharacterSprite { get; private set; }
 }

@@ -2,14 +2,13 @@
 
 [ext_resource type="Script" uid="uid://cr1ksd4hq85c5" path="res://scenes/Main.cs" id="1_elqb8"]
 [ext_resource type="TileSet" uid="uid://dw1vrkwayomc4" path="res://resources/tiles.tres" id="2_rvslj"]
+[ext_resource type="PackedScene" uid="uid://crswnosk42f08" path="res://scenes/character/CharacterGhost.tscn" id="2_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://c41ajax6qudj2" path="res://scenes/manager/GridManager.tscn" id="3_0bbpv"]
 [ext_resource type="TileSet" uid="uid://w30rxhqm5mb6" path="res://resources/highlight.tres" id="4_vcsgt"]
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_0bbpv"]
-size = Vector2(16, 16)
-
 [node name="Main" type="Node"]
 script = ExtResource("1_elqb8")
+characterGhostScene = ExtResource("2_vcsgt")
 
 [node name="GridManager" parent="." node_paths=PackedStringArray("baseTerrainTileMapLayer", "highlightTileMapLayer") instance=ExtResource("3_0bbpv")]
 baseTerrainTileMapLayer = NodePath("../BaseTerrainTileMapLayer")
@@ -23,8 +22,3 @@ tile_set = ExtResource("2_rvslj")
 modulate = Color(1, 1, 1, 0.470588)
 scale = Vector2(0.25, 0.25)
 tile_set = ExtResource("4_vcsgt")
-
-[node name="Cursor" type="Sprite2D" parent="."]
-visible = false
-texture = SubResource("PlaceholderTexture2D_0bbpv")
-centered = false
