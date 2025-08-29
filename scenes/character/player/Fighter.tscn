@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://d102wokjh2xys"]
+[gd_scene load_steps=4 format=3 uid="uid://d102wokjh2xys"]
 
 [ext_resource type="Texture2D" uid="uid://dw8srmm4wcxxq" path="res://assets/tiles/tilemap.png" id="1_d6h0k"]
+[ext_resource type="Script" uid="uid://dxy0uasbcy2mw" path="res://scenes/character/player/Fighter.cs" id="1_t341s"]
 [ext_resource type="PackedScene" uid="uid://cq1nm17mtj8ig" path="res://scenes/component/CharacterComponent.tscn" id="2_xu2be"]
 
-[node name="Fighter" type="CharacterBody2D"]
+[node name="Fighter" type="CharacterBody2D" node_paths=PackedStringArray("characterComponent")]
+script = ExtResource("1_t341s")
+characterComponent = NodePath("CharacterComponent")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_d6h0k")
@@ -12,3 +15,4 @@ region_enabled = true
 region_rect = Rect2(51, 119, 17, 17)
 
 [node name="CharacterComponent" parent="." instance=ExtResource("2_xu2be")]
+characterResourcePath = "uid://bmgl05g3kkrw0"

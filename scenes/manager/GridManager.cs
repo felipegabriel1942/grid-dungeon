@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using Game.Component;
 using Godot;
@@ -19,7 +20,7 @@ public partial class GridManager : Node
 
 	public override void _Ready()
 	{
-		GD.Print(baseTerrainTileMapLayer.GetChildren().Count);
+
 	}
 
 	public Vector2I GetMouseGridCellPosition()
@@ -30,19 +31,44 @@ public partial class GridManager : Node
 		return new Vector2I((int)gridPosition.X, (int)gridPosition.Y);
 	}
 
-	public void UpdateValidWalkableTiles(CharacterComponent characterComponent)
+	public void UpdateValidWalkableTiles(Vector2I rootCell)
 	{
-		var rootCell = characterComponent.GetGridCellPosition();
-		var validTiles = GetValidTilesInRadius(rootCell, 3);
+		walkableTiles.Clear();
+		var validTiles = GetValidTilesInRadius(rootCell, 2);
 		walkableTiles.UnionWith(validTiles);
+		walkableTiles.ExceptWith(GetOccupiedTiles());
 	}
 
 	public void HighlightWalkableTiles()
 	{
 		foreach (var tile in walkableTiles)
 		{
-			highlightTileMapLayer.SetCell(tile, 0, Vector2I.Zero);
+			highlightTileMapLayer.SetCell(tile, 1, Vector2I.Zero);
 		}
+	}
+
+	private List<Vector2I> GetValidTilesInRadius(Vector2I rootCell, int radius)
+	{
+		return GetTilesInRadius(rootCell, radius, TileHasCustomData);
+	}
+
+	private List<Vector2I> GetTilesInRadius(Vector2I rootCell, int radius, Func<Vector2I, bool> filterFn)
+	{
+		var result = new List<Vector2I>();
+
+		for (var x = rootCell.X - radius; x <= rootCell.X + radius; x++)
+		{
+			for (var y = rootCell.Y - radius; y <= rootCell.Y + radius; y++)
+			{
+				var tilePosition = new Vector2I(x, y);
+
+				if (!filterFn(tilePosition)) continue;
+
+				result.Add(tilePosition);
+			}
+		}
+
+		return result;
 	}
 
 	public bool TileHasCustomData(Vector2I tilePosition)
@@ -58,33 +84,22 @@ public partial class GridManager : Node
 		return false;
 	}
 
-
-
-	private List<Vector2I> GetValidTilesInRadius(Vector2I rootCell, int radius)
+	private IEnumerable<Vector2I> GetOccupiedTiles()
 	{
-		return GetTilesInRadius(rootCell, radius, (tilePosition) =>
-			{
-				return TileHasCustomData(tilePosition);
-			}
-		);
+		var characterComponents = GetTree()
+			.GetNodesInGroup(nameof(CharacterComponent))
+			.Cast<CharacterComponent>();
+
+		return characterComponents.Select(x => x.GetGridCellPosition());
 	}
 
-	private List<Vector2I> GetTilesInRadius(Vector2I rootCell, int radius, Func<Vector2I, bool> filterFn)
+	public void ClearHighlightedTiles()
 	{
-		var result = new List<Vector2I>();
+		highlightTileMapLayer.Clear();
+	}
 
-		for (int x = rootCell.X - radius; x <= rootCell.X; x++)
-		{
-			for (int y = rootCell.Y - radius; y <= rootCell.Y + radius; y++)
-			{
-				var tilePosition = new Vector2I(x, y);
-
-				if (!filterFn(tilePosition)) continue;
-
-				result.Add(tilePosition);
-			}
-		}
-
-		return result;
+	public bool IsTilePositionBuildable(Vector2I tilePosition)
+	{
+		return walkableTiles.Contains(tilePosition);
 	}
 }

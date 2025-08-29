@@ -1,9 +1,8 @@
-[gd_scene load_steps=7 format=4 uid="uid://cwyl703e68mdf"]
+[gd_scene load_steps=6 format=4 uid="uid://cwyl703e68mdf"]
 
 [ext_resource type="Script" uid="uid://cr1ksd4hq85c5" path="res://scenes/Main.cs" id="1_elqb8"]
 [ext_resource type="TileSet" uid="uid://dw1vrkwayomc4" path="res://resources/tiles.tres" id="2_rvslj"]
 [ext_resource type="PackedScene" uid="uid://c41ajax6qudj2" path="res://scenes/manager/GridManager.tscn" id="3_0bbpv"]
-[ext_resource type="PackedScene" uid="uid://d102wokjh2xys" path="res://scenes/character/player/Fighter.tscn" id="4_rarhs"]
 [ext_resource type="TileSet" uid="uid://w30rxhqm5mb6" path="res://resources/highlight.tres" id="4_vcsgt"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_0bbpv"]
@@ -21,12 +20,11 @@ tile_map_data = PackedByteArray("AAABAAIAAAACAAEAAAABAAEAAAACAAAAAAACAAEAAAAGAAA
 tile_set = ExtResource("2_rvslj")
 
 [node name="HighlightTileMapLayer" type="TileMapLayer" parent="."]
+modulate = Color(1, 1, 1, 0.470588)
 scale = Vector2(0.25, 0.25)
 tile_set = ExtResource("4_vcsgt")
 
 [node name="Cursor" type="Sprite2D" parent="."]
+visible = false
 texture = SubResource("PlaceholderTexture2D_0bbpv")
 centered = false
-
-[node name="Fighter" parent="." instance=ExtResource("4_rarhs")]
-position = Vector2(27, 53)
