@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://xogfefcif533"]
+
+[ext_resource type="Script" uid="uid://3h0y05ecr0e" path="res://scenes/manager/MovingManager.cs" id="1_rp36u"]
+
+[node name="MovingManager" type="Node"]
+script = ExtResource("1_rp36u")
