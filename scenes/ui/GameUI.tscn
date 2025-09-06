@@ -1,6 +1,10 @@
-[gd_scene format=3 uid="uid://b3whucttsnim0"]
+[gd_scene load_steps=2 format=3 uid="uid://b3whucttsnim0"]
 
-[node name="GameUI" type="CanvasLayer"]
+[ext_resource type="Script" uid="uid://dj7oqtn2cqdng" path="res://scenes/ui/GameUi.cs" id="1_r8hcy"]
+
+[node name="GameUI" type="CanvasLayer" node_paths=PackedStringArray("moveEnemyButton")]
+script = ExtResource("1_r8hcy")
+moveEnemyButton = NodePath("MarginContainer/HBoxContainer/Button")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15

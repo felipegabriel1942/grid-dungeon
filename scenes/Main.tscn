@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=4 uid="uid://cwyl703e68mdf"]
+[gd_scene load_steps=11 format=4 uid="uid://cwyl703e68mdf"]
 
 [ext_resource type="Script" uid="uid://cr1ksd4hq85c5" path="res://scenes/Main.cs" id="1_elqb8"]
 [ext_resource type="TileSet" uid="uid://dw1vrkwayomc4" path="res://resources/tiles.tres" id="2_rvslj"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://c41ajax6qudj2" path="res://scenes/manager/GridManager.tscn" id="3_0bbpv"]
 [ext_resource type="PackedScene" uid="uid://xogfefcif533" path="res://scenes/manager/MovingManager.tscn" id="3_c01mt"]
 [ext_resource type="TileSet" uid="uid://w30rxhqm5mb6" path="res://resources/highlight.tres" id="4_vcsgt"]
+[ext_resource type="PackedScene" uid="uid://ngiq5uovtjq4" path="res://scenes/manager/EnemyManager.tscn" id="5_lhr70"]
 [ext_resource type="PackedScene" uid="uid://d102wokjh2xys" path="res://scenes/character/player/Fighter.tscn" id="6_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://cbkwviny0ss2g" path="res://scenes/character/Rat.tscn" id="7_jlsqs"]
 [ext_resource type="PackedScene" uid="uid://b3whucttsnim0" path="res://scenes/ui/GameUI.tscn" id="9_q8u5g"]
@@ -21,6 +22,13 @@ highlightTileMapLayer = NodePath("../HighlightTileMapLayer")
 gridManager = NodePath("../GridManager")
 characterGhostScene = ExtResource("2_vcsgt")
 ySortRoot = NodePath("../YSortRoot")
+
+[node name="EnemyManager" parent="." node_paths=PackedStringArray("tileMapLayer", "fighter", "enemy", "visualEnemyPath", "gameUi") instance=ExtResource("5_lhr70")]
+tileMapLayer = NodePath("../YSortRoot/BaseTerrainTileMapLayer")
+fighter = NodePath("../YSortRoot/PlayerParty/Fighter")
+enemy = NodePath("../YSortRoot/EnemyParty/Rat")
+visualEnemyPath = NodePath("../Line2D")
+gameUi = NodePath("../GameUI")
 
 [node name="YSortRoot" type="Node2D" parent="."]
 
@@ -46,3 +54,6 @@ scale = Vector2(0.25, 0.25)
 tile_set = ExtResource("4_vcsgt")
 
 [node name="GameUI" parent="." instance=ExtResource("9_q8u5g")]
+
+[node name="Line2D" type="Line2D" parent="."]
+default_color = Color(1, 0.14, 0.14, 1)
