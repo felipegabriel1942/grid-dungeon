@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://c2hbkfog0y3st"]
+
+[ext_resource type="PackedScene" uid="uid://cq1nm17mtj8ig" path="res://scenes/component/CharacterComponent.tscn" id="1_6rh5s"]
+[ext_resource type="Texture2D" uid="uid://dn0i4w74xcgmj" path="res://assets/characters/goblin.png" id="2_7bs8q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_033bu"]
+atlas = ExtResource("2_7bs8q")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bavm0"]
+atlas = ExtResource("2_7bs8q")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rkw83"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_033bu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bavm0")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="Goblin" type="Node2D"]
+
+[node name="CharacterComponent" parent="." instance=ExtResource("1_6rh5s")]
+characterResourcePath = "uid://benlkn22jkwn7"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_rkw83")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.924828
+centered = false

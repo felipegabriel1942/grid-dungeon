@@ -8,4 +8,5 @@ public partial class Fighter : CharacterBody2D
     
     [Export]
     public CharacterComponent characterComponent { get; private set; }
+    
 }

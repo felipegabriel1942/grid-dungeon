@@ -97,7 +97,7 @@ public partial class GridManager : Node
 		highlightTileMapLayer.Clear();
 	}
 
-	public bool IsTilePositionBuildable(Vector2I tilePosition)
+	public bool IsTilePositionValid(Vector2I tilePosition)
 	{
 		return walkableTiles.Contains(tilePosition);
 	}

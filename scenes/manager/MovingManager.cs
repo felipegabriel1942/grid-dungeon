@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using Game.Character;
 using Game.Component;
-using Game.Resources.Character;
 using Godot;
 
 namespace Game.Manager;
@@ -19,23 +16,15 @@ public partial class MovingManager : Node
     [Export]
     private Node2D ySortRoot;
 
-    private CharacterResource fighterResource;
-    private Vector2I? hoveredGridCell;
+    private Vector2I hoveredGridCell;
     private CharacterGhost characterGhost;
-    private CharacterComponent hoveredCharacter;
     private CharacterComponent selectedCharacter;
-
+    private CharacterComponent hoveredCharacter;
+    private Node2D playerParty;
 
     public override void _Ready()
     {
-        // fighterResource = GD.Load<CharacterResource>("res://resources/character/fighter.tres");
-
-        // fighter = fighterResource.CharacterScene.Instantiate<Fighter>();
-        // fighter.GlobalPosition = startingPosition;
-
-        // GD.Print(fighter);
-
-        // AddChild(fighter);
+        playerParty = GetNode<Node2D>("%PlayerParty");
     }
     
     public override void _Process(double delta)
@@ -46,13 +35,13 @@ public partial class MovingManager : Node
         hoveredCharacter = GetTree()
                 .GetNodesInGroup(nameof(CharacterComponent))
                 .Cast<CharacterComponent>()
-                .FirstOrDefault((characterComponent) => characterComponent.GetGridCellPosition() == hoveredGridCell.Value);
-        
+                .FirstOrDefault((characterComponent) => characterComponent.GetGridCellPosition() == hoveredGridCell);
+
 		if (characterGhost != null)
         {
-            characterGhost.GlobalPosition = hoveredGridCell.Value * 16;
+            characterGhost.GlobalPosition = hoveredGridCell * 16;
 
-            if (gridManager.IsTilePositionBuildable(hoveredGridCell.Value))
+            if (gridManager.IsTilePositionValid(hoveredGridCell))
             {
                 characterGhost.SetValid();
             }
@@ -65,39 +54,36 @@ public partial class MovingManager : Node
 
 	public override void _UnhandledInput(InputEvent evt)
 	{
+
 		if (evt.IsActionPressed("left_click")
             && characterGhost == null
             && selectedCharacter == null
-			&& hoveredGridCell == hoveredCharacter.GetGridCellPosition())
-		{
-            selectedCharacter = GetTree()
-                .GetNodesInGroup(nameof(CharacterComponent))
-                .Cast<CharacterComponent>()
-                .FirstOrDefault((characterComponent) => characterComponent.GetGridCellPosition() == hoveredGridCell.Value);
+            && hoveredCharacter != null
+            && playerParty.FindChild(hoveredCharacter.GetParent().Name) != null
+            && hoveredGridCell == hoveredCharacter.GetGridCellPosition())
+        {
+            selectedCharacter = hoveredCharacter;
 
-			characterGhost = characterGhostScene.Instantiate<CharacterGhost>();
+            characterGhost = characterGhostScene.Instantiate<CharacterGhost>();
 
-            var characterSprite = hoveredCharacter.characterResource.CharacterSprite.Instantiate<Sprite2D>();
+            var characterSprite = selectedCharacter.characterResource.CharacterSprite.Instantiate<Sprite2D>();
 
             characterGhost.AddChild(characterSprite);
             ySortRoot.AddChild(characterGhost);
 
             selectedCharacter = hoveredCharacter;
-			gridManager.UpdateValidWalkableTiles(selectedCharacter.GetGridCellPosition());
-			gridManager.HighlightWalkableTiles();
-		}
+            gridManager.UpdateValidWalkableTiles(selectedCharacter.GetGridCellPosition());
+            gridManager.HighlightWalkableTiles();
+        }
 
 		if (evt.IsActionPressed("left_click")
             && characterGhost != null
             && selectedCharacter != null
-            && gridManager.IsTilePositionBuildable(hoveredGridCell.Value))
+            && gridManager.IsTilePositionValid(hoveredGridCell))
         {
-            // var character = GetTree()
-            //     .GetNodesInGroup(nameof(CharacterComponent))
-            //     .Cast<CharacterComponent>()
-            //     .FirstOrDefault((characterComponent) => characterComponent == selectedCharacter);
-
-            selectedCharacter.GlobalPosition = characterGhost.GlobalPosition;
+            selectedCharacter
+                .GetParent<Node2D>()
+                .GlobalPosition = hoveredGridCell * 16;
 
             ySortRoot.RemoveChild(characterGhost);
             characterGhost = null;

@@ -1,6 +1,5 @@
 using Game.Resources.Character;
 using Godot;
-using System;
 
 namespace Game.Component;
 

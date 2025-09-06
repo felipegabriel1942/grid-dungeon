@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=4 uid="uid://cwyl703e68mdf"]
+[gd_scene load_steps=10 format=4 uid="uid://cwyl703e68mdf"]
 
 [ext_resource type="Script" uid="uid://cr1ksd4hq85c5" path="res://scenes/Main.cs" id="1_elqb8"]
 [ext_resource type="TileSet" uid="uid://dw1vrkwayomc4" path="res://resources/tiles.tres" id="2_rvslj"]
@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://xogfefcif533" path="res://scenes/manager/MovingManager.tscn" id="3_c01mt"]
 [ext_resource type="TileSet" uid="uid://w30rxhqm5mb6" path="res://resources/highlight.tres" id="4_vcsgt"]
 [ext_resource type="PackedScene" uid="uid://d102wokjh2xys" path="res://scenes/character/player/Fighter.tscn" id="6_nxtc6"]
+[ext_resource type="PackedScene" uid="uid://cbkwviny0ss2g" path="res://scenes/character/Rat.tscn" id="7_jlsqs"]
+[ext_resource type="PackedScene" uid="uid://b3whucttsnim0" path="res://scenes/ui/GameUI.tscn" id="9_q8u5g"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_elqb8")
@@ -27,11 +29,20 @@ tile_map_data = PackedByteArray("AAABAAIAAAACAAEAAAABAAEAAAACAAAAAAACAAEAAAAGAAA
 tile_set = ExtResource("2_rvslj")
 
 [node name="PlayerParty" type="Node2D" parent="YSortRoot"]
+unique_name_in_owner = true
 
 [node name="Fighter" parent="YSortRoot/PlayerParty" instance=ExtResource("6_nxtc6")]
 position = Vector2(48, 64)
+
+[node name="EnemyParty" type="Node2D" parent="YSortRoot"]
+unique_name_in_owner = true
+
+[node name="Rat" parent="YSortRoot/EnemyParty" instance=ExtResource("7_jlsqs")]
+position = Vector2(352, 176)
 
 [node name="HighlightTileMapLayer" type="TileMapLayer" parent="."]
 modulate = Color(1, 1, 1, 0.470588)
 scale = Vector2(0.25, 0.25)
 tile_set = ExtResource("4_vcsgt")
+
+[node name="GameUI" parent="." instance=ExtResource("9_q8u5g")]
