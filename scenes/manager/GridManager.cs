@@ -9,8 +9,6 @@ namespace Game.Manager;
 public partial class GridManager : Node
 {
 
-	private const int TILE_SIZE = 16;
-
 	[Export]
 	private TileMapLayer baseTerrainTileMapLayer;
 
