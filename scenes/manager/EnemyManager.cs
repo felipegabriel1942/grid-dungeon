@@ -55,13 +55,15 @@ public partial class EnemyManager : Node
 
         pathToPlayer = pathToPlayer.Skip(1).ToArray();
 
-        var goToPosition = pathToPlayer[0] + new Vector2I(TILE_SIZE / 2, TILE_SIZE / 2);
+        if (!pathToPlayer.IsEmpty())
+        {
+            var goToPosition = pathToPlayer[0] + new Vector2I(TILE_SIZE / 2, TILE_SIZE / 2);
 
-        enemy.GlobalPosition = goToPosition;
+            enemy.GlobalPosition = goToPosition;
 
-        visualEnemyPath.Points = pathToPlayer;
+            visualEnemyPath.Points = pathToPlayer;
 
-        
+        }
     }
 
 }
