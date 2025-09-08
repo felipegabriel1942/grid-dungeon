@@ -1,11 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://cbkwviny0ss2g"]
+[gd_scene load_steps=5 format=3 uid="uid://cbkwviny0ss2g"]
 
+[ext_resource type="Script" uid="uid://cpw8m43cimysr" path="res://scenes/character/Rat.cs" id="1_8d3bh"]
 [ext_resource type="PackedScene" uid="uid://dp8kx3b1ht4ec" path="res://scenes/character/sprite/RatSprite2d.tscn" id="1_aj7qv"]
 [ext_resource type="PackedScene" uid="uid://cq1nm17mtj8ig" path="res://scenes/component/CharacterComponent.tscn" id="2_hwas0"]
+[ext_resource type="PackedScene" uid="uid://32vq525vcs0k" path="res://scenes/component/EnemyMovementComponent.tscn" id="3_hwas0"]
 
 [node name="Rat" type="Area2D"]
+script = ExtResource("1_8d3bh")
 
 [node name="Sprite2D" parent="." instance=ExtResource("1_aj7qv")]
 centered = true
 
 [node name="CharacterComponent" parent="." instance=ExtResource("2_hwas0")]
+
+[node name="EnemyMovementComponent" parent="." instance=ExtResource("3_hwas0")]

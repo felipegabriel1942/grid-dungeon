@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://32vq525vcs0k"]
+
+[ext_resource type="Script" uid="uid://2koojo5mtlb" path="res://scenes/component/EnemyMovementComponent.cs" id="1_82ojf"]
+
+[node name="EnemyMovementComponent" type="Node2D"]
+script = ExtResource("1_82ojf")
