@@ -4,6 +4,4 @@ namespace Game;
 
 public partial class Main : Node
 {
-
-
 }

@@ -3,10 +3,10 @@ using Godot;
 
 namespace Game.Character;
 
-public partial class Fighter : CharacterBody2D
+public partial class Fighter : Node2D
 {
-    
-    [Export]
-    public CharacterComponent characterComponent { get; private set; }
-    
+	
+	[Export]
+	public CharacterComponent characterComponent { get; private set; }
+	
 }
