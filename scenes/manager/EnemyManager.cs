@@ -23,7 +23,7 @@ public partial class EnemyManager : Node
     private GameUi gameUi;
 
     [Export]
-    private Rat enemy;
+    private Rat[] enemies = [];
 
     private AStarGrid2D pathfindingGrid = new();
 
@@ -31,7 +31,7 @@ public partial class EnemyManager : Node
 
     public override void _Ready()
     {
-        gameUi.MovingEnemy += MoveEnemy;
+        gameUi.MovingEnemy += MoveEnemies;
 
 
         visualEnemyPath.GlobalPosition = new Vector2I(TILE_SIZE / 2, TILE_SIZE / 2);
@@ -45,13 +45,19 @@ public partial class EnemyManager : Node
         {
             var customData = tileMapLayer.GetCellTileData(cell);
             pathfindingGrid.SetPointSolid(cell, !(bool)customData.GetCustomData("is_walkable"));
-        }
+        }   
+    }
 
-        MoveEnemy();
+    private void MoveEnemies()
+    {
+        foreach (var enemy in enemies)
+        {
+            MoveEnemy(enemy);
+        }
     }
 
 
-    private void MoveEnemy()
+    private void MoveEnemy(Rat enemy)
     {
         pathToPlayer = pathfindingGrid.GetPointPath((Vector2I)(enemy.GlobalPosition / TILE_SIZE), (Vector2I)(fighter.GlobalPosition / TILE_SIZE));
         visualEnemyPath.Points = pathToPlayer;

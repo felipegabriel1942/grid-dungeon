@@ -23,12 +23,12 @@ gridManager = NodePath("../GridManager")
 characterGhostScene = ExtResource("2_vcsgt")
 ySortRoot = NodePath("../YSortRoot")
 
-[node name="EnemyManager" parent="." node_paths=PackedStringArray("tileMapLayer", "fighter", "visualEnemyPath", "gameUi", "enemy") instance=ExtResource("5_lhr70")]
+[node name="EnemyManager" parent="." node_paths=PackedStringArray("tileMapLayer", "fighter", "visualEnemyPath", "gameUi", "enemies") instance=ExtResource("5_lhr70")]
 tileMapLayer = NodePath("../YSortRoot/BaseTerrainTileMapLayer")
 fighter = NodePath("../YSortRoot/PlayerParty/Fighter")
 visualEnemyPath = NodePath("../Line2D")
 gameUi = NodePath("../GameUI")
-enemy = NodePath("../YSortRoot/EnemyParty/Rat")
+enemies = [NodePath("../YSortRoot/EnemyParty/Rat"), NodePath("../YSortRoot/EnemyParty/Rat2")]
 
 [node name="YSortRoot" type="Node2D" parent="."]
 
@@ -46,7 +46,10 @@ position = Vector2(48, 64)
 unique_name_in_owner = true
 
 [node name="Rat" parent="YSortRoot/EnemyParty" instance=ExtResource("7_jlsqs")]
-position = Vector2(352, 176)
+position = Vector2(112, 144)
+
+[node name="Rat2" parent="YSortRoot/EnemyParty" instance=ExtResource("7_jlsqs")]
+position = Vector2(48, 144)
 
 [node name="HighlightTileMapLayer" type="TileMapLayer" parent="."]
 modulate = Color(1, 1, 1, 0.470588)
@@ -56,5 +59,6 @@ tile_set = ExtResource("4_vcsgt")
 [node name="GameUI" parent="." instance=ExtResource("9_q8u5g")]
 
 [node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(0, 0)
 width = 2.0
 default_color = Color(1, 0.14, 0.14, 1)
