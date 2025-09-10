@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Game.Character;
 using Game.UI;
@@ -17,9 +18,6 @@ public partial class EnemyManager : Node
     private Fighter fighter;
 
     [Export]
-    private Line2D visualEnemyPath = null;
-
-    [Export]
     private GameUi gameUi;
 
     [Export]
@@ -29,27 +27,47 @@ public partial class EnemyManager : Node
 
     private Vector2[] pathToPlayer = [];
 
+    private HashSet<Vector2I> reservedCells = new();
+
+    private Dictionary<Rat, Line2D> visualPathDictionary = new();
+
     public override void _Ready()
     {
         gameUi.MovingEnemy += MoveEnemies;
 
-
-        visualEnemyPath.GlobalPosition = new Vector2I(TILE_SIZE / 2, TILE_SIZE / 2);
-
         pathfindingGrid.Region = tileMapLayer.GetUsedRect();
         pathfindingGrid.CellSize = new Vector2I(TILE_SIZE, TILE_SIZE);
-        pathfindingGrid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Never;
+        pathfindingGrid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Always;
         pathfindingGrid.Update();
 
         foreach (var cell in tileMapLayer.GetUsedCells())
         {
             var customData = tileMapLayer.GetCellTileData(cell);
             pathfindingGrid.SetPointSolid(cell, !(bool)customData.GetCustomData("is_walkable"));
-        }   
+        }
+
+        CreateVisualPaths();
+        MoveEnemies();
+    }
+
+    private void CreateVisualPaths()
+    {
+        foreach (var enemy in enemies)
+        {
+            Line2D visualPath = new Line2D();
+            visualPath.Width = 4.0f;
+            visualPath.DefaultColor = Colors.Red;
+            visualPath.GlobalPosition = new Vector2I(TILE_SIZE / 2, TILE_SIZE / 2);
+
+            GetParent().CallDeferred("add_child", visualPath);
+            visualPathDictionary.Add(enemy, visualPath);
+        }
     }
 
     private void MoveEnemies()
     {
+        reservedCells.Clear();
+
         foreach (var enemy in enemies)
         {
             MoveEnemy(enemy);
@@ -59,20 +77,33 @@ public partial class EnemyManager : Node
 
     private void MoveEnemy(Rat enemy)
     {
-        pathToPlayer = pathfindingGrid.GetPointPath((Vector2I)(enemy.GlobalPosition / TILE_SIZE), (Vector2I)(fighter.GlobalPosition / TILE_SIZE));
-        visualEnemyPath.Points = pathToPlayer;
+        // Pega o caminho entre o inimigo e o alvo
+        pathToPlayer = pathfindingGrid.GetPointPath(
+            (Vector2I)(enemy.GlobalPosition / TILE_SIZE),
+            (Vector2I)(fighter.GlobalPosition / TILE_SIZE)
+        );
 
-        pathToPlayer = pathToPlayer.Skip(1).ToArray();
+         // Seta o caminho até o jogador para ser visualizado
+        visualPathDictionary[enemy].Points = pathToPlayer;
 
-        if (pathToPlayer.Count() > 1)
+        // Move o inimigo para o proximo tile de acordo com seu raio de movimento        
+        if (enemy.characterComponent.characterResource != null)
+        {
+            pathToPlayer = pathToPlayer
+                .Skip(enemy.characterComponent.characterResource.MovementRadius)
+                .ToArray();
+        }
+
+        // Aponta para a proxima posicao que o jogador pode se mover
+		if (pathToPlayer.Count() > 1)
         {
             var goToPosition = pathToPlayer[0] + new Vector2I(TILE_SIZE / 2, TILE_SIZE / 2);
 
             enemy.GlobalPosition = goToPosition;
 
-            visualEnemyPath.Points = pathToPlayer;
+            visualPathDictionary[enemy].Points = pathToPlayer;
 
         }
-    }
 
+    }
 }
