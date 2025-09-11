@@ -83,27 +83,36 @@ public partial class EnemyManager : Node
             (Vector2I)(fighter.GlobalPosition / TILE_SIZE)
         );
 
-         // Seta o caminho até o jogador para ser visualizado
+        // Seta o caminho até o jogador para ser visualizado
         visualPathDictionary[enemy].Points = pathToPlayer;
 
         // Move o inimigo para o proximo tile de acordo com seu raio de movimento        
         if (enemy.characterComponent.characterResource != null)
         {
+            var movementRadius = enemy.characterComponent.characterResource.MovementRadius;
+
+            if ((pathToPlayer.Count() - movementRadius) == 1)
+            {
+                movementRadius = 1;
+            }
+
             pathToPlayer = pathToPlayer
-                .Skip(enemy.characterComponent.characterResource.MovementRadius)
+                .Skip(movementRadius)
                 .ToArray();
         }
 
         // Aponta para a proxima posicao que o jogador pode se mover
-		if (pathToPlayer.Count() > 1)
+        if (pathToPlayer.Count() > 1)
         {
             var goToPosition = pathToPlayer[0] + new Vector2I(TILE_SIZE / 2, TILE_SIZE / 2);
+
+            pathfindingGrid.SetPointSolid((Vector2I)(enemy.GlobalPosition / TILE_SIZE), false);
+            pathfindingGrid.SetPointSolid((Vector2I)(goToPosition / TILE_SIZE), true);
 
             enemy.GlobalPosition = goToPosition;
 
             visualPathDictionary[enemy].Points = pathToPlayer;
 
         }
-
     }
 }
