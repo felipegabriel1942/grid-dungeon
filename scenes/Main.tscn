@@ -45,22 +45,22 @@ position = Vector2(80, 80)
 unique_name_in_owner = true
 
 [node name="Rat" parent="YSortRoot/EnemyParty" instance=ExtResource("7_jlsqs")]
-position = Vector2(112, 144)
+position = Vector2(368, 144)
 
 [node name="Rat2" parent="YSortRoot/EnemyParty" instance=ExtResource("7_jlsqs")]
-position = Vector2(48, 144)
+position = Vector2(192, 144)
 
 [node name="Rat3" parent="YSortRoot/EnemyParty" instance=ExtResource("7_jlsqs")]
-position = Vector2(80, 160)
+position = Vector2(96, 144)
 
 [node name="Rat4" parent="YSortRoot/EnemyParty" instance=ExtResource("7_jlsqs")]
-position = Vector2(80, 192)
+position = Vector2(368, 80)
 
 [node name="Rat5" parent="YSortRoot/EnemyParty" instance=ExtResource("7_jlsqs")]
-position = Vector2(32, 192)
+position = Vector2(256, 144)
 
 [node name="Rat6" parent="YSortRoot/EnemyParty" instance=ExtResource("7_jlsqs")]
-position = Vector2(128, 176)
+position = Vector2(256, 96)
 
 [node name="HighlightTileMapLayer" type="TileMapLayer" parent="."]
 modulate = Color(1, 1, 1, 0.470588)

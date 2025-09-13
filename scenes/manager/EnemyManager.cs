@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Game.Character;
@@ -22,6 +23,9 @@ public partial class EnemyManager : Node
 
     [Export]
     private Rat[] enemies = [];
+
+    [Export]
+    private bool developMode = false;
 
     private AStarGrid2D pathfindingGrid = new();
 
@@ -50,8 +54,31 @@ public partial class EnemyManager : Node
         MoveEnemies();
     }
 
+    private bool labeIsSet = false;
+
+    public override void _Process(double delta)
+    {
+        if (labeIsSet)
+        {
+            return;
+        }
+
+        for (int i = 0; i < enemies.Count(); i++)
+        {
+            enemies[i].SetLabelValue(i.ToString());
+        }
+
+        labeIsSet = true;
+    }
+
     private void CreateVisualPaths()
     {
+
+        if (developMode == false)
+        {
+            return;
+        }
+
         foreach (var enemy in enemies)
         {
             Line2D visualPath = new Line2D();
@@ -64,12 +91,13 @@ public partial class EnemyManager : Node
         }
     }
 
-    private void MoveEnemies()
+    private async void MoveEnemies()
     {
         reservedCells.Clear();
 
         foreach (var enemy in enemies)
         {
+            await ToSignal(GetTree().CreateTimer(2f), Timer.SignalName.Timeout);
             MoveEnemy(enemy);
         }
     }
@@ -82,9 +110,6 @@ public partial class EnemyManager : Node
             (Vector2I)(enemy.GlobalPosition / TILE_SIZE),
             (Vector2I)(fighter.GlobalPosition / TILE_SIZE)
         );
-
-        // Seta o caminho até o jogador para ser visualizado
-        visualPathDictionary[enemy].Points = pathToPlayer;
 
         // Move o inimigo para o proximo tile de acordo com seu raio de movimento        
         if (enemy.characterComponent.characterResource != null)
@@ -110,9 +135,11 @@ public partial class EnemyManager : Node
             pathfindingGrid.SetPointSolid((Vector2I)(goToPosition / TILE_SIZE), true);
 
             enemy.GlobalPosition = goToPosition;
-
+        }
+        
+        if (visualPathDictionary.Count > 0)
+        {
             visualPathDictionary[enemy].Points = pathToPlayer;
-
         }
     }
 }
