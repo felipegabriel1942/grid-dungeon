@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cbkwviny0ss2g"]
+[gd_scene load_steps=6 format=3 uid="uid://cbkwviny0ss2g"]
 
 [ext_resource type="Script" uid="uid://cpw8m43cimysr" path="res://scenes/character/Rat.cs" id="1_8d3bh"]
 [ext_resource type="PackedScene" uid="uid://dp8kx3b1ht4ec" path="res://scenes/character/sprite/RatSprite2d.tscn" id="1_aj7qv"]
 [ext_resource type="PackedScene" uid="uid://cq1nm17mtj8ig" path="res://scenes/component/CharacterComponent.tscn" id="2_hwas0"]
+[ext_resource type="PackedScene" uid="uid://dvkmky8xdfxyt" path="res://scenes/component/EnemyComponent.tscn" id="4_8d3bh"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8d3bh"]
 font_size = 12
@@ -31,3 +32,5 @@ centered = true
 
 [node name="CharacterComponent" parent="." instance=ExtResource("2_hwas0")]
 characterResourcePath = "uid://c8wugg8mp8b3m"
+
+[node name="EnemyComponent" parent="." instance=ExtResource("4_8d3bh")]

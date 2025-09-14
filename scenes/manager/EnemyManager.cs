@@ -22,21 +22,20 @@ public partial class EnemyManager : Node
     private GameUi gameUi;
 
     [Export]
-    private Rat[] enemies = [];
-
-    [Export]
     private bool developMode = false;
 
     private AStarGrid2D pathfindingGrid = new();
 
     private Vector2[] pathToPlayer = [];
 
-    private HashSet<Vector2I> reservedCells = new();
-
     private Dictionary<Rat, Line2D> visualPathDictionary = new();
+
+    private HashSet<Rat> enemies = new();
 
     public override void _Ready()
     {
+
+
         gameUi.MovingEnemy += MoveEnemies;
 
         pathfindingGrid.Region = tileMapLayer.GetUsedRect();
@@ -65,10 +64,18 @@ public partial class EnemyManager : Node
 
         for (int i = 0; i < enemies.Count(); i++)
         {
-            enemies[i].SetLabelValue(i.ToString());
+            enemies.ElementAt(i).SetLabelValue(i.ToString());
         }
 
         labeIsSet = true;
+    }
+
+    private void GetEnemiesOnGrid()
+    {
+        enemies = GetNode("%EnemyParty")
+            .GetChildren()
+            .Cast<Rat>()
+            .ToHashSet();
     }
 
     private void CreateVisualPaths()
@@ -93,15 +100,12 @@ public partial class EnemyManager : Node
 
     private async void MoveEnemies()
     {
-        reservedCells.Clear();
-
         foreach (var enemy in enemies)
         {
             await ToSignal(GetTree().CreateTimer(2f), Timer.SignalName.Timeout);
             MoveEnemy(enemy);
         }
     }
-
 
     private void MoveEnemy(Rat enemy)
     {
@@ -136,7 +140,7 @@ public partial class EnemyManager : Node
 
             enemy.GlobalPosition = goToPosition;
         }
-        
+
         if (visualPathDictionary.Count > 0)
         {
             visualPathDictionary[enemy].Points = pathToPlayer;
