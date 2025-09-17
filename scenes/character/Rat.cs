@@ -1,4 +1,3 @@
-using System;
 using Game.Component;
 using Godot;
 
@@ -6,21 +5,39 @@ namespace Game.Character;
 
 public partial class Rat : Node2D
 {
+
+	[Signal]
+	public delegate void MoveCompletedEventHandler(Rat sender);
+
 	[Export]
 	public CharacterComponent characterComponent { get; private set; }
 
-	private Label label;
+	private Vector2 targetPosition;
+	private bool isMoving = false;
+	private float speed = 100f;
 
 	public override void _Ready()
 	{
-		label = GetNode<Label>("Label");
-		GD.Print(label);
 	}
 
-	public void SetLabelValue(string value)
+	public override void _Process(double delta)
 	{
-		GD.Print(label);
-		label.Text = value;
+		if (isMoving)
+		{
+			GlobalPosition = GlobalPosition.MoveToward(targetPosition, (float)delta * speed);
+
+			if (GlobalPosition.DistanceTo(targetPosition) < 1f)
+			{
+				GlobalPosition = targetPosition;
+				isMoving = false;
+				EmitSignal(SignalName.MoveCompleted, this);
+			}
+		}
 	}
 
+	public void MoveTo(Vector2 newTarget)
+	{
+		targetPosition = newTarget;
+		isMoving = true;
+	}
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Game.Character;
@@ -11,6 +10,7 @@ public partial class EnemyManager : Node
 {
 
     private const int TILE_SIZE = 16;
+    private static readonly Vector2I CELL_CENTER_OFFSET = new(TILE_SIZE / 2, TILE_SIZE / 2);
 
     [Export]
     private TileMapLayer tileMapLayer;
@@ -24,20 +24,25 @@ public partial class EnemyManager : Node
     [Export]
     private bool developMode = false;
 
-    private AStarGrid2D pathfindingGrid = new();
-
-    private Vector2[] pathToPlayer = [];
-
+    private readonly AStarGrid2D pathfindingGrid = new();
+    private readonly Vector2[] pathToPlayer = [];
     private Dictionary<Rat, Line2D> visualPathDictionary = new();
-
     private HashSet<Rat> enemies = new();
+    private Queue<Rat> moveQueue = new();
 
     public override void _Ready()
     {
+        InitPathfinding();
+        InitEnemies();
+        InitDebugPaths();
 
+        gameUi.MovingEnemy += StartEnemyTurn;
 
-        gameUi.MovingEnemy += MoveEnemies;
+        StartEnemyTurn();
+    }
 
+    private void InitPathfinding()
+    {
         pathfindingGrid.Region = tileMapLayer.GetUsedRect();
         pathfindingGrid.CellSize = new Vector2I(TILE_SIZE, TILE_SIZE);
         pathfindingGrid.DiagonalMode = AStarGrid2D.DiagonalModeEnum.Always;
@@ -45,105 +50,94 @@ public partial class EnemyManager : Node
 
         foreach (var cell in tileMapLayer.GetUsedCells())
         {
-            var customData = tileMapLayer.GetCellTileData(cell);
-            pathfindingGrid.SetPointSolid(cell, !(bool)customData.GetCustomData("is_walkable"));
+            var data = tileMapLayer.GetCellTileData(cell);
+            bool isWalkable = (bool)data.GetCustomData("is_walkable");
+            pathfindingGrid.SetPointSolid(cell, !isWalkable);
         }
-
-        CreateVisualPaths();
-        MoveEnemies();
     }
 
-    private bool labeIsSet = false;
-
-    public override void _Process(double delta)
+    private void InitEnemies()
     {
-        if (labeIsSet)
-        {
-            return;
-        }
-
-        for (int i = 0; i < enemies.Count(); i++)
-        {
-            enemies.ElementAt(i).SetLabelValue(i.ToString());
-        }
-
-        labeIsSet = true;
+        enemies = GetNode("%EnemyParty").GetChildren().Cast<Rat>().ToHashSet();
     }
 
-    private void GetEnemiesOnGrid()
+    private void InitDebugPaths()
     {
-        enemies = GetNode("%EnemyParty")
-            .GetChildren()
-            .Cast<Rat>()
-            .ToHashSet();
-    }
-
-    private void CreateVisualPaths()
-    {
-
-        if (developMode == false)
-        {
-            return;
-        }
+        if (!developMode) return;
 
         foreach (var enemy in enemies)
         {
-            Line2D visualPath = new Line2D();
-            visualPath.Width = 4.0f;
-            visualPath.DefaultColor = Colors.Red;
-            visualPath.GlobalPosition = new Vector2I(TILE_SIZE / 2, TILE_SIZE / 2);
+            var visualPath = new Line2D
+            {
+                Width = 4.0f,
+                DefaultColor = Colors.Red,
+                GlobalPosition = CELL_CENTER_OFFSET
+            };
 
             GetParent().CallDeferred("add_child", visualPath);
             visualPathDictionary.Add(enemy, visualPath);
         }
     }
 
-    private async void MoveEnemies()
+    private void StartEnemyTurn()
     {
-        foreach (var enemy in enemies)
+        moveQueue = new Queue<Rat>(enemies);
+        MoveNextEnemy();
+    }
+
+    private void MoveNextEnemy()
+    {
+        if (moveQueue.Count == 0) return;
+
+        var enemy = moveQueue.Dequeue();
+        enemy.MoveCompleted += OnEnemyMoveCompleted;
+
+        var path = CalculatePath(enemy);
+        if (path.Length > 1)
         {
-            await ToSignal(GetTree().CreateTimer(2f), Timer.SignalName.Timeout);
-            MoveEnemy(enemy);
+            var goTo = path[0] + CELL_CENTER_OFFSET;
+            UpdateGridOccupancy(enemy, goTo);
+            enemy.MoveTo(goTo);
+            UpdateDebugPath(enemy, path);
+        }
+        else
+        {
+            MoveNextEnemy();
         }
     }
 
-    private void MoveEnemy(Rat enemy)
+    private void OnEnemyMoveCompleted(Rat enemy)
     {
-        // Pega o caminho entre o inimigo e o alvo
-        pathToPlayer = pathfindingGrid.GetPointPath(
+        enemy.MoveCompleted -= OnEnemyMoveCompleted;
+
+        MoveNextEnemy();
+    }
+
+    private Vector2[] CalculatePath(Rat enemy)
+    {
+        var path = pathfindingGrid.GetPointPath(
             (Vector2I)(enemy.GlobalPosition / TILE_SIZE),
             (Vector2I)(fighter.GlobalPosition / TILE_SIZE)
         );
 
-        // Move o inimigo para o proximo tile de acordo com seu raio de movimento        
-        if (enemy.characterComponent.characterResource != null)
+        var radius = enemy.characterComponent.characterResource?.MovementRadius ?? 1;
+
+        if (path.Length - radius == 1) radius = 1;
+
+        return path.Skip(radius).ToArray();
+    }
+
+    private void UpdateGridOccupancy(Rat enemy, Vector2 target)
+    {
+        pathfindingGrid.SetPointSolid((Vector2I)(enemy.GlobalPosition / TILE_SIZE), false);
+        pathfindingGrid.SetPointSolid((Vector2I)(target / TILE_SIZE), true);
+    }
+
+    private void UpdateDebugPath(Rat enemy, Vector2[] path)
+    {
+        if (developMode && visualPathDictionary.TryGetValue(enemy, out var line))
         {
-            var movementRadius = enemy.characterComponent.characterResource.MovementRadius;
-
-            if ((pathToPlayer.Count() - movementRadius) == 1)
-            {
-                movementRadius = 1;
-            }
-
-            pathToPlayer = pathToPlayer
-                .Skip(movementRadius)
-                .ToArray();
-        }
-
-        // Aponta para a proxima posicao que o jogador pode se mover
-        if (pathToPlayer.Count() > 1)
-        {
-            var goToPosition = pathToPlayer[0] + new Vector2I(TILE_SIZE / 2, TILE_SIZE / 2);
-
-            pathfindingGrid.SetPointSolid((Vector2I)(enemy.GlobalPosition / TILE_SIZE), false);
-            pathfindingGrid.SetPointSolid((Vector2I)(goToPosition / TILE_SIZE), true);
-
-            enemy.GlobalPosition = goToPosition;
-        }
-
-        if (visualPathDictionary.Count > 0)
-        {
-            visualPathDictionary[enemy].Points = pathToPlayer;
+            line.Points = path;
         }
     }
 }

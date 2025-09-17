@@ -1,31 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://cbkwviny0ss2g"]
+[gd_scene load_steps=5 format=3 uid="uid://cbkwviny0ss2g"]
 
 [ext_resource type="Script" uid="uid://cpw8m43cimysr" path="res://scenes/character/Rat.cs" id="1_8d3bh"]
 [ext_resource type="PackedScene" uid="uid://dp8kx3b1ht4ec" path="res://scenes/character/sprite/RatSprite2d.tscn" id="1_aj7qv"]
 [ext_resource type="PackedScene" uid="uid://cq1nm17mtj8ig" path="res://scenes/component/CharacterComponent.tscn" id="2_hwas0"]
 [ext_resource type="PackedScene" uid="uid://dvkmky8xdfxyt" path="res://scenes/component/EnemyComponent.tscn" id="4_8d3bh"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_8d3bh"]
-font_size = 12
-
 [node name="Rat" type="Node2D" node_paths=PackedStringArray("characterComponent")]
 script = ExtResource("1_8d3bh")
 characterComponent = NodePath("CharacterComponent")
-
-[node name="Label" type="Label" parent="."]
-z_index = 1
-y_sort_enabled = true
-anchors_preset = 14
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -16.0
-offset_right = 32.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "9"
-label_settings = SubResource("LabelSettings_8d3bh")
 
 [node name="Sprite2D" parent="." instance=ExtResource("1_aj7qv")]
 centered = true
