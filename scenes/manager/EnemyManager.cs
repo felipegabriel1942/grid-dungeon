@@ -10,7 +10,6 @@ public partial class EnemyManager : Node
 {
 
     private const int TILE_SIZE = 16;
-    private static readonly Vector2I CELL_CENTER_OFFSET = new(TILE_SIZE / 2, TILE_SIZE / 2);
 
     [Export]
     private TileMapLayer tileMapLayer;
@@ -23,6 +22,9 @@ public partial class EnemyManager : Node
 
     [Export]
     private bool developMode = false;
+
+    [Export]
+    private GridManager gridManager;
 
     private readonly AStarGrid2D pathfindingGrid = new();
     private readonly Vector2[] pathToPlayer = [];
@@ -38,7 +40,7 @@ public partial class EnemyManager : Node
 
         gameUi.MovingEnemy += StartEnemyTurn;
 
-        StartEnemyTurn();
+        HighlightEnemiesWalkableTiles();
     }
 
     private void InitPathfinding()
@@ -71,11 +73,20 @@ public partial class EnemyManager : Node
             {
                 Width = 4.0f,
                 DefaultColor = Colors.Red,
-                GlobalPosition = CELL_CENTER_OFFSET
+                GlobalPosition = Vector2I.Zero
             };
 
             GetParent().CallDeferred("add_child", visualPath);
             visualPathDictionary.Add(enemy, visualPath);
+        }
+    }
+
+    private void HighlightEnemiesWalkableTiles()
+    {
+        foreach (var enemy in enemies)
+        {
+            gridManager.UpdateValidWalkableTiles(enemy.characterComponent.GetGridCellPosition());
+            gridManager.HighlightWalkableTiles();
         }
     }
 
@@ -99,9 +110,8 @@ public partial class EnemyManager : Node
 
         if (path.Length > 1 && CanDetectPlayer(enemyCell, fighterCell, enemy.detecctionRadius))
         {
-            var goTo = path[0] + CELL_CENTER_OFFSET;
-            UpdateGridOccupancy(enemy, goTo);
-            enemy.MoveTo(goTo);
+            UpdateGridOccupancy(enemy, path[0]);
+            enemy.MoveTo(path[0]);
             UpdateDebugPath(enemy, path);
         }
         else
@@ -111,8 +121,6 @@ public partial class EnemyManager : Node
     }
 
     private bool CanDetectPlayer(Vector2I enemyPos, Vector2I playerPos, int detecctionRadius) {
-        GD.Print(enemyPos.DistanceTo(playerPos));
-
         return enemyPos.DistanceTo(playerPos) <= detecctionRadius;
     }
 

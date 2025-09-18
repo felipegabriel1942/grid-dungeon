@@ -23,10 +23,11 @@ gridManager = NodePath("../GridManager")
 characterGhostScene = ExtResource("2_vcsgt")
 ySortRoot = NodePath("../YSortRoot")
 
-[node name="EnemyManager" parent="." node_paths=PackedStringArray("tileMapLayer", "fighter", "gameUi") instance=ExtResource("5_lhr70")]
+[node name="EnemyManager" parent="." node_paths=PackedStringArray("tileMapLayer", "fighter", "gameUi", "gridManager") instance=ExtResource("5_lhr70")]
 tileMapLayer = NodePath("../YSortRoot/BaseTerrainTileMapLayer")
 fighter = NodePath("../YSortRoot/PlayerParty/Fighter")
 gameUi = NodePath("../GameUI")
+gridManager = NodePath("../GridManager")
 
 [node name="YSortRoot" type="Node2D" parent="."]
 
