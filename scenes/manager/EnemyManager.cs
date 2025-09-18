@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Game.Autoload;
 using Game.Character;
 using Game.UI;
 using Godot;
@@ -34,6 +35,8 @@ public partial class EnemyManager : Node
 
     public override void _Ready()
     {
+        GameEvents.Instance.EnemyMoved += OnEnemyMoveCompleted;
+
         InitPathfinding();
         InitEnemies();
         InitDebugPaths();
@@ -101,8 +104,6 @@ public partial class EnemyManager : Node
         if (moveQueue.Count == 0) return;
 
         var enemy = moveQueue.Dequeue();
-        enemy.MoveCompleted += OnEnemyMoveCompleted;
-
         var path = CalculatePath(enemy);
 
         Vector2I enemyCell = tileMapLayer.LocalToMap(enemy.GlobalPosition);
@@ -126,8 +127,6 @@ public partial class EnemyManager : Node
 
     private void OnEnemyMoveCompleted(Rat enemy)
     {
-        enemy.MoveCompleted -= OnEnemyMoveCompleted;
-
         MoveNextEnemy();
     }
 

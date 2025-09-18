@@ -1,3 +1,4 @@
+using Game.Autoload;
 using Game.Component;
 using Godot;
 
@@ -5,9 +6,6 @@ namespace Game.Character;
 
 public partial class Rat : Node2D
 {
-
-	[Signal]
-	public delegate void MoveCompletedEventHandler(Rat sender);
 
 	[Export]
 	public CharacterComponent characterComponent { get; private set; }
@@ -33,7 +31,7 @@ public partial class Rat : Node2D
 			{
 				GlobalPosition = targetPosition;
 				isMoving = false;
-				EmitSignal(SignalName.MoveCompleted, this);
+				GameEvents.EmitEnemyMoved(this);
 			}
 		}
 	}

@@ -1,3 +1,4 @@
+using Game.Character;
 using Godot;
 
 namespace Game.Autoload;
@@ -5,22 +6,22 @@ namespace Game.Autoload;
 public partial class GameEvents : Node
 {
 
-    // public static GameEvents Instance { get; private set; }
+    public static GameEvents Instance { get; private set; }
 
-    // [Signal]
-    // public delegate void MovingEnemyEventHandler();
+    [Signal]
+    public delegate void EnemyMovedEventHandler(Rat rat);
 
-    // public override void _Notification(int what)
-    // {
-    //     if (what == NotificationSceneInstantiated)
-    //     {
-    //         Instance = this;
-    //     }
-    // }
+    public override void _Notification(int what)
+    {
+        if (what == NotificationSceneInstantiated)
+        {
+            Instance = this;
+        }
+    }
 
-    // public static void EmitMovingEnemy()
-    // {
-    //     Instance.EmitSignal(SignalName.MovingEnemy);
-    // }
+    public static void EmitEnemyMoved(Rat rat)
+    {
+        Instance.EmitSignal(SignalName.EnemyMoved, rat);
+    }
 
 }
