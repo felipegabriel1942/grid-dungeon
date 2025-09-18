@@ -93,7 +93,11 @@ public partial class EnemyManager : Node
         enemy.MoveCompleted += OnEnemyMoveCompleted;
 
         var path = CalculatePath(enemy);
-        if (path.Length > 1)
+
+        Vector2I enemyCell = tileMapLayer.LocalToMap(enemy.GlobalPosition);
+        Vector2I fighterCell = tileMapLayer.LocalToMap(fighter.GlobalPosition);
+
+        if (path.Length > 1 && CanDetectPlayer(enemyCell, fighterCell, enemy.detecctionRadius))
         {
             var goTo = path[0] + CELL_CENTER_OFFSET;
             UpdateGridOccupancy(enemy, goTo);
@@ -104,6 +108,12 @@ public partial class EnemyManager : Node
         {
             MoveNextEnemy();
         }
+    }
+
+    private bool CanDetectPlayer(Vector2I enemyPos, Vector2I playerPos, int detecctionRadius) {
+        GD.Print(enemyPos.DistanceTo(playerPos));
+
+        return enemyPos.DistanceTo(playerPos) <= detecctionRadius;
     }
 
     private void OnEnemyMoveCompleted(Rat enemy)

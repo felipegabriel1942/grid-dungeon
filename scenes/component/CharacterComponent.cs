@@ -20,7 +20,6 @@ public partial class CharacterComponent : Node2D
 		AddToGroup(nameof(CharacterComponent));
 	}
 
-
 	public Vector2I GetGridCellPosition()
 	{
 		var gridPosition = GlobalPosition / 16;

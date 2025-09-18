@@ -12,6 +12,9 @@ public partial class Rat : Node2D
 	[Export]
 	public CharacterComponent characterComponent { get; private set; }
 
+	[Export]
+    public int detecctionRadius { get; private set; }
+
 	private Vector2 targetPosition;
 	private bool isMoving = false;
 	private float speed = 100f;

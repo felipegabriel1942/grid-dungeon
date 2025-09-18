@@ -8,6 +8,7 @@
 [node name="Rat" type="Node2D" node_paths=PackedStringArray("characterComponent")]
 script = ExtResource("1_8d3bh")
 characterComponent = NodePath("CharacterComponent")
+detecctionRadius = 6
 
 [node name="Sprite2D" parent="." instance=ExtResource("1_aj7qv")]
 centered = true
