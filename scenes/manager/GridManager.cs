@@ -30,10 +30,15 @@ public partial class GridManager : Node
 		return new Vector2I((int)gridPosition.X, (int)gridPosition.Y);
 	}
 
-	public void UpdateValidWalkableTiles(Vector2I rootCell)
+	public void UpdateValidWalkableTiles(CharacterComponent characterComponent)
 	{
+
+		GD.Print(characterComponent);
+
 		walkableTiles.Clear();
-		var validTiles = GetValidTilesInRadius(rootCell, 2);
+		var rootCell = characterComponent.GetGridCellPosition();
+		var tileArea = new Rect2I(rootCell, characterComponent.characterResource.Dimensions);
+		var validTiles = GetValidTilesInRadius(tileArea, characterComponent.characterResource.MovementRadius);
 		walkableTiles.UnionWith(validTiles);
 		walkableTiles.ExceptWith(GetOccupiedTiles());
 	}
@@ -46,28 +51,39 @@ public partial class GridManager : Node
 		}
 	}
 
-	private List<Vector2I> GetValidTilesInRadius(Vector2I rootCell, int radius)
+	private List<Vector2I> GetValidTilesInRadius(Rect2I tileArea, int radius)
 	{
-		return GetTilesInRadius(rootCell, radius, TileHasCustomData);
+		return GetTilesInRadius(tileArea, radius, TileHasCustomData);
 	}
 
-	private List<Vector2I> GetTilesInRadius(Vector2I rootCell, int radius, Func<Vector2I, bool> filterFn)
+	private List<Vector2I> GetTilesInRadius(Rect2I tileArea, int radius, Func<Vector2I, bool> filterFn)
 	{
 		var result = new List<Vector2I>();
+		var tileAreaF = tileArea.ToRect2F();
+		var tileAreaCenter = tileAreaF.GetCenter();
+		var radiusMod = Mathf.Max(tileAreaF.Size.X, tileAreaF.Size.Y) / 2;
 
-		for (var x = rootCell.X - radius; x <= rootCell.X + radius; x++)
+		for (var x = tileArea.Position.X - radius; x <= tileArea.Position.X + radius; x++)
 		{
-			for (var y = rootCell.Y - radius; y <= rootCell.Y + radius; y++)
+			for (var y = tileArea.Position.Y - radius; y <= tileArea.Position.Y + radius; y++)
 			{
 				var tilePosition = new Vector2I(x, y);
 
-				if (!filterFn(tilePosition)) continue;
+				if (!IsTileInsideCircle(tileAreaCenter, tilePosition, radius + radiusMod) || !filterFn(tilePosition)) continue;
 
 				result.Add(tilePosition);
 			}
 		}
 
 		return result;
+	}
+
+	private bool IsTileInsideCircle(Vector2 centerPosition, Vector2 tilePosition, float radius)
+	{
+		var distanceX = centerPosition.X - (tilePosition.X + .5);
+		var distanceY = centerPosition.Y - (tilePosition.Y + .5);
+		var distanceSquared = (distanceX * distanceX) + (distanceY * distanceY);
+		return distanceSquared <= radius * radius;
 	}
 
 	public bool TileHasCustomData(Vector2I tilePosition)

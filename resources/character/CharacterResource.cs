@@ -9,6 +9,9 @@ public partial class CharacterResource : Resource
     public int MovementRadius { get; private set; }
 
     [Export]
+    public Vector2I Dimensions { get; private set; } = Vector2I.One;
+
+    [Export]
     public PackedScene CharacterScene { get; private set; }
 
     [Export]

@@ -43,7 +43,8 @@ public partial class EnemyManager : Node
 
         gameUi.MovingEnemy += StartEnemyTurn;
 
-        HighlightEnemiesWalkableTiles();
+        // TODO: WILL BE REMOVED ON FUTURE
+        Callable.From(HighlightEnemiesWalkableTiles).CallDeferred();
     }
 
     private void InitPathfinding()
@@ -88,7 +89,7 @@ public partial class EnemyManager : Node
     {
         foreach (var enemy in enemies)
         {
-            gridManager.UpdateValidWalkableTiles(enemy.characterComponent.GetGridCellPosition());
+            gridManager.UpdateValidWalkableTiles(enemy.characterComponent);
             gridManager.HighlightWalkableTiles();
         }
     }

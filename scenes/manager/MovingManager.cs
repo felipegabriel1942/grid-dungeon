@@ -72,7 +72,7 @@ public partial class MovingManager : Node
             ySortRoot.AddChild(characterGhost);
 
             selectedCharacter = hoveredCharacter;
-            gridManager.UpdateValidWalkableTiles(selectedCharacter.GetGridCellPosition());
+            gridManager.UpdateValidWalkableTiles(selectedCharacter);
             gridManager.HighlightWalkableTiles();
         }
 

@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public partial class EnemyComponent : Node2D
 {
@@ -7,5 +6,4 @@ public partial class EnemyComponent : Node2D
 	{
 		AddToGroup(nameof(EnemyComponent));
 	}
-
 }
