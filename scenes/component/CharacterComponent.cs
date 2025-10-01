@@ -10,6 +10,8 @@ public partial class CharacterComponent : Node2D
 
 	public CharacterResource characterResource { get; private set; }
 
+	public bool hasMoved = false;
+
 	public override void _Ready()
 	{
 		if (characterResourcePath != null)

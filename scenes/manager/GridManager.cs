@@ -32,9 +32,6 @@ public partial class GridManager : Node
 
 	public void UpdateValidWalkableTiles(CharacterComponent characterComponent)
 	{
-
-		GD.Print(characterComponent);
-
 		walkableTiles.Clear();
 		var rootCell = characterComponent.GetGridCellPosition();
 		var tileArea = new Rect2I(rootCell, characterComponent.characterResource.Dimensions);

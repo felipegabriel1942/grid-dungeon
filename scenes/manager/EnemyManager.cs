@@ -102,7 +102,11 @@ public partial class EnemyManager : Node
 
     private void MoveNextEnemy()
     {
-        if (moveQueue.Count == 0) return;
+        if (moveQueue.Count == 0)
+        {
+            GameEvents.EmitEnemyTurnEnded();
+            return;
+        }
 
         var enemy = moveQueue.Dequeue();
         var path = CalculatePath(enemy);

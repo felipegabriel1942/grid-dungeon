@@ -24,6 +24,7 @@ characterGhostScene = ExtResource("2_vcsgt")
 ySortRoot = NodePath("../YSortRoot")
 
 [node name="EnemyManager" parent="." node_paths=PackedStringArray("tileMapLayer", "fighter", "gameUi", "gridManager") instance=ExtResource("5_lhr70")]
+unique_name_in_owner = true
 tileMapLayer = NodePath("../YSortRoot/BaseTerrainTileMapLayer")
 fighter = NodePath("../YSortRoot/PlayerParty/Fighter")
 gameUi = NodePath("../GameUI")

@@ -20,4 +20,4 @@ size_flags_vertical = 8
 
 [node name="Button" type="Button" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
-text = "Move Enemy"
+text = "End Turn"

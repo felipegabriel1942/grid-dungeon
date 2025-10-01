@@ -59,6 +59,7 @@ public partial class MovingManager : Node
             && characterGhost == null
             && selectedCharacter == null
             && hoveredCharacter != null
+            && !hoveredCharacter.hasMoved
             && playerParty.FindChild(hoveredCharacter.GetParent().Name) != null
             && hoveredGridCell == hoveredCharacter.GetGridCellPosition())
         {
@@ -86,6 +87,7 @@ public partial class MovingManager : Node
                 .GlobalPosition = hoveredGridCell * 16;
 
             ySortRoot.RemoveChild(characterGhost);
+            selectedCharacter.hasMoved = true;
             characterGhost = null;
             selectedCharacter = null;
             gridManager.ClearHighlightedTiles();

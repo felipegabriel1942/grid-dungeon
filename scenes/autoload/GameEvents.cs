@@ -11,6 +11,9 @@ public partial class GameEvents : Node
     [Signal]
     public delegate void EnemyMovedEventHandler(Rat rat);
 
+    [Signal]
+    public delegate void EnemyTurnEndedEventHandler();
+
     public override void _Notification(int what)
     {
         if (what == NotificationSceneInstantiated)
@@ -24,4 +27,8 @@ public partial class GameEvents : Node
         Instance.EmitSignal(SignalName.EnemyMoved, rat);
     }
 
+    public static void EmitEnemyTurnEnded()
+    {
+        Instance.EmitSignal(SignalName.EnemyTurnEnded);
+    }
 }
