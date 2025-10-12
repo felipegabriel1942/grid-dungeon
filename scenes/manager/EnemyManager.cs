@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.Autoload;
 using Game.Character;
-using Game.UI;
 using Godot;
 
 namespace Game.Manager;
@@ -19,9 +18,6 @@ public partial class EnemyManager : Node
     private Fighter fighter;
 
     [Export]
-    private GameUi gameUi;
-
-    [Export]
     private bool developMode = false;
 
     [Export]
@@ -35,16 +31,17 @@ public partial class EnemyManager : Node
 
     public override void _Ready()
     {
-        GameEvents.Instance.EnemyMoved += OnEnemyMoveCompleted;
-
+        InitEventListeners();
         InitPathfinding();
         InitEnemies();
         InitDebugPaths();
+    }
 
-        gameUi.MovingEnemy += StartEnemyTurn;
-
-        // TODO: WILL BE REMOVED ON FUTURE
-        Callable.From(HighlightEnemiesWalkableTiles).CallDeferred();
+    private void InitEventListeners() 
+    {
+        GameEvents.Instance.EnemyMoved += OnEnemyMoveCompleted;
+        GameEvents.Instance.PlayerTurnEnded += StartEnemyTurn;
+        GameEvents.Instance.ShowEnemyMovementRange += ToggleEnemiesHighlightWalkableTiles;
     }
 
     private void InitPathfinding()
@@ -85,13 +82,23 @@ public partial class EnemyManager : Node
         }
     }
 
-    private void HighlightEnemiesWalkableTiles()
+    private void ToggleEnemiesHighlightWalkableTiles()
+    {
+        if (gridManager.EnemyHighlightTileMapLayerIsActive()) 
+        {
+            gridManager.ClearHighlightedTiles();
+        } else {
+            HighlightWalkableTiles();
+        }
+    }
+
+    private void HighlightWalkableTiles() 
     {
         foreach (var enemy in enemies)
         {
             gridManager.UpdateValidWalkableTiles(enemy.characterComponent);
             gridManager.HighlightWalkableTiles();
-        }
+        };
     }
 
     private void StartEnemyTurn()
@@ -133,6 +140,12 @@ public partial class EnemyManager : Node
     private void OnEnemyMoveCompleted(Rat enemy)
     {
         MoveNextEnemy();
+
+        if (gridManager.EnemyHighlightTileMapLayerIsActive()) 
+        {
+            gridManager.ClearHighlightedTiles();
+            HighlightWalkableTiles();
+        }
     }
 
     private Vector2[] CalculatePath(Rat enemy)
@@ -152,7 +165,7 @@ public partial class EnemyManager : Node
     private void UpdateGridOccupancy(Rat enemy, Vector2 target)
     {
         pathfindingGrid.SetPointSolid((Vector2I)(enemy.GlobalPosition / TILE_SIZE), false);
-        pathfindingGrid.SetPointSolid((Vector2I)(target / TILE_SIZE), true);
+        pathfindingGrid.SetPointSolid((Vector2I)(target / TILE_SIZE), true);  
     }
 
     private void UpdateDebugPath(Rat enemy, Vector2[] path)

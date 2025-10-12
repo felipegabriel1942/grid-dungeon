@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://focol1v1iek8"]
+
+[ext_resource type="Script" uid="uid://d3vid1oaufxj2" path="res://scenes/manager/FogOfWarManager.cs" id="1_43o8v"]
+
+[node name="FogOfWarManager" type="Node"]
+script = ExtResource("1_43o8v")

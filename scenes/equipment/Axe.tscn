@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://lped2m43irb5"]
+
+[ext_resource type="Texture2D" uid="uid://dw8srmm4wcxxq" path="res://assets/tiles/tilemap.png" id="1_s15ai"]
+
+[node name="Axe" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 0.575959
+texture = ExtResource("1_s15ai")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(187, 153, 16, 16)

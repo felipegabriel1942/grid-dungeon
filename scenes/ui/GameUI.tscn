@@ -2,9 +2,11 @@
 
 [ext_resource type="Script" uid="uid://dj7oqtn2cqdng" path="res://scenes/ui/GameUi.cs" id="1_r8hcy"]
 
-[node name="GameUI" type="CanvasLayer" node_paths=PackedStringArray("moveEnemyButton")]
+[node name="GameUI" type="CanvasLayer" node_paths=PackedStringArray("endPlayerTurnButton", "showEnemyMovementRangeButton", "playerAttackButton")]
 script = ExtResource("1_r8hcy")
-moveEnemyButton = NodePath("MarginContainer/HBoxContainer/Button")
+endPlayerTurnButton = NodePath("MarginContainer/HBoxContainer/EndPlayerTurnButton")
+showEnemyMovementRangeButton = NodePath("MarginContainer/HBoxContainer/ShowEnemyMoveRangeButton")
+playerAttackButton = NodePath("MarginContainer/HBoxContainer/AttackButton")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
@@ -18,6 +20,15 @@ size_flags_horizontal = 4
 layout_mode = 2
 size_flags_vertical = 8
 
-[node name="Button" type="Button" parent="MarginContainer/HBoxContainer"]
+[node name="AttackButton" type="Button" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Attack"
+
+[node name="EndPlayerTurnButton" type="Button" parent="MarginContainer/HBoxContainer"]
 layout_mode = 2
 text = "End Turn"
+
+[node name="ShowEnemyMoveRangeButton" type="Button" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+text = "Enemy Range
+"

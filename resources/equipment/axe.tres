@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=3 format=3 uid="uid://d3rkgv7bhiyaq"]
+
+[ext_resource type="PackedScene" uid="uid://lped2m43irb5" path="res://scenes/equipment/Axe.tscn" id="1_6nbqe"]
+[ext_resource type="Script" uid="uid://b4cilp5nnyitk" path="res://resources/equipment/WeaponResource.cs" id="1_tevpv"]
+
+[resource]
+script = ExtResource("1_tevpv")
+damage = 0
+WeaponScene = ExtResource("1_6nbqe")
+metadata/_custom_type_script = "uid://b4cilp5nnyitk"

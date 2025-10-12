@@ -21,12 +21,9 @@ public partial class Main : Node
 
     private void OnEnemyTurnEnded()
     {
-        GD.Print("Acabou o turno dos inimigos...");
-
         foreach (var playerChar in playerParty.GetChildren().Cast<Fighter>())
         {
             playerChar.characterComponent.hasMoved = false;
         }
     }
-
 }

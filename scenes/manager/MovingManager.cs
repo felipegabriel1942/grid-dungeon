@@ -1,4 +1,5 @@
 using System.Linq;
+using Game.Autoload;
 using Game.Character;
 using Game.Component;
 using Godot;
@@ -77,7 +78,7 @@ public partial class MovingManager : Node
             gridManager.HighlightWalkableTiles();
         }
 
-		if (evt.IsActionPressed("left_click")
+        if (evt.IsActionPressed("left_click")
             && characterGhost != null
             && selectedCharacter != null
             && gridManager.IsTilePositionValid(hoveredGridCell))
@@ -91,7 +92,15 @@ public partial class MovingManager : Node
             characterGhost = null;
             selectedCharacter = null;
             gridManager.ClearHighlightedTiles();
+            GameEvents.EmitPlayerMoved();
+        }
+
+        if (evt.IsActionPressed("right_click")) 
+        {   
+            ySortRoot.RemoveChild(characterGhost);
+            characterGhost = null;
+            selectedCharacter = null;
+            gridManager.ClearHighlightedTiles();
         }
 	}
-
 }

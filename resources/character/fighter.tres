@@ -7,6 +7,9 @@
 [resource]
 script = ExtResource("1_5cpv3")
 MovementRadius = 2
+viewRadius = 3
+Dimensions = Vector2i(1, 1)
 CharacterScene = ExtResource("1_r1tip")
 CharacterSprite = ExtResource("2_fycxx")
+characterType = 0
 metadata/_custom_type_script = "uid://cbwkkn5liod4k"

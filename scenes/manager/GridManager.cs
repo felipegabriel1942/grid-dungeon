@@ -13,18 +13,17 @@ public partial class GridManager : Node
 	private TileMapLayer baseTerrainTileMapLayer;
 
 	[Export]
-	private TileMapLayer highlightTileMapLayer;
+	private TileMapLayer enemyHighlightTileMapLayer;
+
+	[Export]
+	private TileMapLayer playerHighlightTileMapLayer;
 
 	private HashSet<Vector2I> walkableTiles = new();
-
-	public override void _Ready()
-	{
-
-	}
+	public HashSet<Vector2I> viewedTiles = new();
 
 	public Vector2I GetMouseGridCellPosition()
 	{
-		var mousePosition = highlightTileMapLayer.GetGlobalMousePosition();
+		var mousePosition = enemyHighlightTileMapLayer.GetGlobalMousePosition();
 		var gridPosition = mousePosition / 16;
 		gridPosition = gridPosition.Floor();
 		return new Vector2I((int)gridPosition.X, (int)gridPosition.Y);
@@ -40,11 +39,20 @@ public partial class GridManager : Node
 		walkableTiles.ExceptWith(GetOccupiedTiles());
 	}
 
+	public void UpdateViewedTiles(CharacterComponent characterComponent)
+    {
+		viewedTiles.Clear();
+		var rootCell = characterComponent.GetGridCellPosition();
+		var tileArea = new Rect2I(rootCell, characterComponent.characterResource.Dimensions);
+		var validTiles = GetTilesInRadius(tileArea, characterComponent.characterResource.viewRadius, (_) => true);
+		viewedTiles.UnionWith(validTiles);
+    }
+
 	public void HighlightWalkableTiles()
 	{
 		foreach (var tile in walkableTiles)
 		{
-			highlightTileMapLayer.SetCell(tile, 1, Vector2I.Zero);
+			enemyHighlightTileMapLayer.SetCell(tile, 1, Vector2I.Zero);
 		}
 	}
 
@@ -107,11 +115,15 @@ public partial class GridManager : Node
 
 	public void ClearHighlightedTiles()
 	{
-		highlightTileMapLayer.Clear();
+		enemyHighlightTileMapLayer.Clear();
 	}
 
 	public bool IsTilePositionValid(Vector2I tilePosition)
 	{
 		return walkableTiles.Contains(tilePosition);
+	}
+
+	public bool EnemyHighlightTileMapLayerIsActive() {
+		return enemyHighlightTileMapLayer.GetUsedCells().Count() > 0;
 	}
 }

@@ -1,0 +1,11 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://fdiqi8w6m37e"]
+
+[ext_resource type="Texture2D" uid="uid://bhlf7u508ajto" path="res://assets/tiles/fog_of_war.png" id="1_u1mr4"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_u1mr4"]
+texture = ExtResource("1_u1mr4")
+0:0/0 = 0
+1:0/0 = 0
+
+[resource]
+sources/0 = SubResource("TileSetAtlasSource_u1mr4")

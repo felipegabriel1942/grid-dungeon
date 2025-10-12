@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://pdvkt12kxdsx"]
+
+[ext_resource type="Texture2D" uid="uid://dw8srmm4wcxxq" path="res://assets/tiles/tilemap.png" id="1_ab7tm"]
+
+[node name="Sword" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 0.575959
+texture = ExtResource("1_ab7tm")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(136, 136, 16, 16)

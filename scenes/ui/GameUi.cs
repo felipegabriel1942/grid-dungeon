@@ -1,22 +1,29 @@
 using Godot;
+using Game.Autoload;
 
 namespace Game.UI;
 
 public partial class GameUi : CanvasLayer
 {
 
-    [Signal]
-    public delegate void MovingEnemyEventHandler();
+    [Export]
+    private Button endPlayerTurnButton;
 
     [Export]
-    private Button moveEnemyButton;
+    private Button showEnemyMovementRangeButton;
+
+    [Export]
+    private Button playerAttackButton;
 
     public override void _Ready()
     {
-        moveEnemyButton.Pressed += () =>
-        {
-            EmitSignal(SignalName.MovingEnemy);
-        };
+        InitEventEmitters();
     }
 
+    private void InitEventEmitters()
+    {
+        endPlayerTurnButton.Pressed += GameEvents.EmitPlayerTurnEnded;
+        showEnemyMovementRangeButton.Pressed += GameEvents.EmitShowEnemyMovementRange;
+        playerAttackButton.Pressed += GameEvents.EmitPlayerAttack;
+    }
 }
